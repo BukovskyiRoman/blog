@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\AddNewComment;
 use App\Models\Comment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
@@ -117,9 +119,18 @@ class CommentController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return bool[]
+     */
     public function sendInfo(Request $request) {
-        $client = $request->count;
-        $db = Comment::count();
-        return $db;
+        $request->validate([
+            'ts' => ['required', 'integer', 'min:1636899738'],
+        ]);
+        $timestamp = Carbon::createFromTimestamp($request->get('ts'));
+        $comments_last_write_time = Cache::remember('comments-last-write-time', 86400 * 30, function () {
+            return Carbon::now();
+        });
+        return ['is_modified' => ($comments_last_write_time >= $timestamp)];
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Events\AddNewComment;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class Comment extends Model
@@ -19,6 +21,7 @@ class Comment extends Model
     {
         static::saved(function ($comment) {
             //return $comment->id;
+            Cache::put('comments-last-write-time', Carbon::now(), 86400 * 30);
         });
     }
 

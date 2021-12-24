@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\AddNewComment;
 use App\Events\AddNewPost;
 use App\Events\UserAdd;
 use App\Events\UserLike;
 use App\Listeners\SendLikeInfo;
 use App\Listeners\SendPostInfo;
 use App\Listeners\SendUserInfo;
+use App\Listeners\SendCommentInfo;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -32,6 +34,10 @@ class EventServiceProvider extends ServiceProvider
 //        UserLike::class => [
 //            SendLikeInfo::class,
 //        ],
+
+        AddNewComment::class => [
+            SendCommentInfo::class
+        ],
 
         AddNewPost::class => [
             SendPostInfo::class

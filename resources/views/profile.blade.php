@@ -31,11 +31,12 @@
                 @csrf
                 <input type="password" class="form-control" aria-describedby="passwordHelpBlock"
                        placeholder="Old password" name="old_password">
-                <input type="password"  class="form-control" aria-describedby="passwordHelpBlock"
+                <input type="password" class="form-control" aria-describedby="passwordHelpBlock"
                        placeholder="New password" name="new_password">
-                <input type="password"  class="form-control" aria-describedby="passwordHelpBlock"
+                <input type="password" class="form-control" aria-describedby="passwordHelpBlock"
                        placeholder="Confirm new password" name="confirm_new_password">
-                <button type="submit" class="btn btn-light" style="margin-top: 5px; margin-bottom: 2px; width: 100%">Change password
+                <button type="submit" class="btn btn-light" style="margin-top: 5px; margin-bottom: 2px; width: 100%">
+                    Change password
                 </button>
             </form>
         </div>
@@ -52,18 +53,38 @@
         <div
             style="position: relative; margin-left: 3%; margin-top: 0;  padding: 15px; border-radius: 10px; border: solid #4a5568">
             <div style="height: 300px">
-                <img style="margin-left: 15%; height: 280px; border-radius: 10px" src="{{asset('storage/avatars/' . '52.jpg')}}" alt="alt text">
+
+                @if($user->image === null)
+                    <img style="margin-left: 15%; height: 280px; border-radius: 10px"
+                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url('avatars/guest.jpeg')}}"
+                         alt="alt text">
+                @else
+                    <img style="margin-left: 15%; height: 280px; border-radius: 10px"
+                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url(''. $user->image->name)}}"
+                         alt="alt text">
+                @endif
             </div>
-            <form style="margin: 0" method="POST" action="{{route('images.store')}}" enctype="multipart/form-data">
+            <form style="margin: 0" method="POST" action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', 26)}} @endif" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
-                    <label for="formFile" class="form-label">Download yor photo</label>
-                    <input class="form-control" type="file" id="image" name="avatar">
-                    <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
-                        Download
-                    </button>
+                    @if($user->image === null)
+                        <label for="formFile" class="form-label">Download yor photo</label>
+                        <input class="form-control" type="file" id="image" name="avatar">
+                        <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
+                            Download
+                        </button>
+                    @else
+                        @method('PUT')
+                        <label for="formFile" class="form-label">Download yor photo</label>
+                        <input class="form-control" type="file" id="image" name="avatar">
+                        <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
+                            Edit
+                        </button>
+                    @endif
                 </div>
             </form>
+
+
         </div>
 
         <div style="margin-left: 3%; border: solid #4a5568; border-radius: 10px; height: 29.7em; width: 45em;">
@@ -71,7 +92,8 @@
                 <h3>Posts:</h3>
                 @foreach($user->posts as $post)
                     <ul>
-                        <li><a style="text-decoration: none; color: #2d3748; " href="{{route('posts.show', $post->id)}}"> {{$post->title}}</a></li>
+                        <li><a style="text-decoration: none; color: #2d3748; "
+                               href="{{route('posts.show', $post->id)}}"> {{$post->title}}</a></li>
                     </ul>
                 @endforeach
             </div>

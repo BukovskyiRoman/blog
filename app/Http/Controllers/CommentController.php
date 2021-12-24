@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddNewComment;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,12 +45,13 @@ class CommentController extends Controller
         Auth::check() ? $userId = 'user_id' : $userId = 'visitor_id';
         Auth::check() ? $id = Auth::user()->id : $id = $visitorId;
 
-        Comment::create([
+        $comment = Comment::create([
             $userId => $id,
             'body' => $request->comment,
             'post_id' => $request->id
         ]);
 
+        //event(new AddNewComment($comment));
         return redirect()->back();
     }
 
@@ -112,5 +114,12 @@ class CommentController extends Controller
             return redirect('/posts');
         }
         return redirect('/posts')->withErrors("You can't delete this comment!!!");
+    }
+
+
+    public function sendInfo(Request $request) {
+        $client = $request->count;
+        $db = Comment::count();
+        return $db;
     }
 }

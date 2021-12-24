@@ -37,18 +37,11 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //dd(Storage::exists(public_path('avatars/' . $request->user()->id . '.jpg') ));
-        //dd(storage_path('app/public'));
-
-        if (Storage::missing(storage_path('avatars/') . $request->user()->id . '.jpg')) {
-            //dd(Storage::missing(storage_path('avatars/') . $request->user()->id . '.jpg'));
-            $path = $request->file('avatar')->storeAs( public_path(), auth()->id() . '.jpg');
-            dd($path);
-            Image::create([
-                'name' => $path,
-                'user_id' => $request->user()->id,
-            ]);
-        }
+        $path = $request->file('avatar')->store('public/avatars');
+        Image::create([
+            'name' => $path,
+            'user_id' => $request->user()->id,
+        ]);
 
         return redirect()->back();
     }
@@ -72,7 +65,7 @@ class ImageController extends Controller
      */
     public function edit($id)
     {
-        //
+        dd('edit');
     }
 
     /**

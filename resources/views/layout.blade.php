@@ -14,9 +14,28 @@
         });
 
         var channel = pusher.subscribe('test');
-        channel.bind('App\\Events\\AddNewPost', function(data) {
+        channel.bind('App\\Events\\AddNewPost', function (data) {
             document.location.reload();
         });
+
+
+        window.addEventListener('load', (event) => {
+            const handler = function () {
+                console.log("this is the message");
+                $.ajax({
+                    type: 'POST',
+                    url: "/comments/info",
+                    data: {},
+                    success: function (data) {
+
+                    }
+                });
+
+                setTimeout(handler, 7000);
+            };
+            handler();
+        });
+
     </script>
 </head>
 

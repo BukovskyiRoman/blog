@@ -127,7 +127,7 @@ class CommentController extends Controller
         $request->validate([
             'ts' => ['required', 'integer', 'min:1636899738'],
         ]);
-        $timestamp = Carbon::createFromTimestamp($request->get('ts'));
+        $timestamp = Carbon::createFromTimestamp($request->get('ts'));                                           //todo Carbon
         $comments_last_write_time = Cache::remember('comments-last-write-time', 86400 * 30, function () {
             return Carbon::now();
         });

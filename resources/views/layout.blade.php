@@ -9,14 +9,14 @@
 
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
-        // var pusher = new Pusher('2d98b5d868d66f6639a7', {
-        //     cluster: 'eu'
-        // });
+        var pusher = new Pusher('2d98b5d868d66f6639a7', {
+            cluster: 'eu'
+        });
 
-        // var channel = pusher.subscribe('test');
-        // channel.bind('App\\Events\\AddNewPost', function (data) {
-        //     document.location.reload();
-        // });
+        var channel = pusher.subscribe('test');
+        channel.bind('App\\Events\\AddNewPost', function (data) {
+            document.location.reload();
+        });
 
         const page_load_time = parseInt((new Date().getTime() / 1000).toFixed(0));
 

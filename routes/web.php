@@ -21,7 +21,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::any('/comments/info', [CommentController::class, 'sendInfo']);
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('profile', [UserController::class, 'showAdminPanel'])->name('admin.profile');
+});
+
+Route::get('/comments/info', [CommentController::class, 'checkAddComment']);
 Route::post('/like/post', [LikeController::class, 'likePost']);
 Route::post('/like/comment', [LikeController::class, 'likeComment']);
 

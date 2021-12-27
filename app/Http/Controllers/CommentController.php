@@ -43,7 +43,6 @@ class CommentController extends Controller
     {
         if ($request->hasCookie('guest')) $visitorId = $request->cookies->get('guest');
 
-
         Auth::check() ? $userId = 'user_id' : $userId = 'visitor_id';
         Auth::check() ? $id = Auth::user()->id : $id = $visitorId;
 
@@ -54,6 +53,7 @@ class CommentController extends Controller
         ]);
 
         //event(new AddNewComment($comment));
+
         return redirect()->back();
     }
 
@@ -123,7 +123,7 @@ class CommentController extends Controller
      * @param Request $request
      * @return bool[]
      */
-    public function sendInfo(Request $request) {
+    public function checkAddComment(Request $request) {
         $request->validate([
             'ts' => ['required', 'integer', 'min:1636899738'],
         ]);

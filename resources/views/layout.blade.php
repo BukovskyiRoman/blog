@@ -19,17 +19,12 @@
         });
 
         const page_load_time = parseInt((new Date().getTime() / 1000).toFixed(0));
-
-
         window.addEventListener('load', (event) => {
             const handler = function () {
-                console.log("this is the message");
                 $.ajax({
                     type: 'GET',
                     url: "/comments/info?ts=" + page_load_time,
-                    // data: {},
                     success: function (data) {
-                        console.log(data);
                         if (data.is_modified) {
                             document.location.reload();
                         } else {
@@ -47,7 +42,7 @@
 
 <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 65%">
     <a style="text-decoration: none; margin-left: 15px" href="/posts"><h1>Blog</h1></a>
-    <a href="{{route('profile')}}" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
+    <a href="@if(auth()->check() && auth()->user()->is_admin === 1) {{route('admin.profile')}} @else {{route('profile')}} @endif" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
     <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
     <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
 </div>

@@ -38,6 +38,10 @@ class UserController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function changeUserName(Request $request) {
         $request->validate([
            'name' => 'required|max:30|alpha_dash'
@@ -48,5 +52,15 @@ class UserController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showAdminPanel() {
+        $users = User::all();
+        $user = User::where('id', Auth::user()->id)->with('image', 'posts')->first();
+
+        return view('admin-panel', compact('users', 'user'));
     }
 }

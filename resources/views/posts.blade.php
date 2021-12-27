@@ -129,6 +129,7 @@
             </div>
         @endforeach
 
+{{--            {{dd($posts->links())}}--}}
         <div class="container" style="margin: 50px auto; padding-left: 30%">
             {{ $posts->links() }}
         </div>

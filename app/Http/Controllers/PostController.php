@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\AddNewPost;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Jobs\ProcessBlog;
 use App\Listeners\SendPostInfo;
 use App\Models\Comment;
 use App\Models\Like;
@@ -46,7 +47,7 @@ class PostController extends Controller
                     $posts_number = Post::query()->count();
 
                     $result = DB::table('posts AS p')                                              //todo !!!!!!!!!!!!!!!!!!!!!!!!!!
-                        ->leftJoin('likes as l', 'p.id', 'l.post_id')
+                    ->leftJoin('likes as l', 'p.id', 'l.post_id')
                         ->select(['p.id', DB::raw('count(distinct l.id) AS post_likes')])
                         ->groupBy('p.id')
                         ->orderBy('post_likes', $sort)
@@ -55,7 +56,7 @@ class PostController extends Controller
                             return Post::where('id', $item->id)->first();
                         });
                     return (new LengthAwarePaginator($result, $posts_number, $perPage, $page))              //todo !!!!!!!!!!!!!
-                        ->withPath(route('posts.index'))
+                    ->withPath(route('posts.index'))
                         ->appends($options);
                 } else {
                     $sort = $request->get('sort');
@@ -110,15 +111,15 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $validated = $request->validated();
+        $validatedData = $request->validated();
         $post = Post::create([
             'user_id' => Auth::user()->id,
-            'title' => $validated['title'],
-            'body' => $validated['body']
+            'title' => $validatedData['title'],
+            'body' => $validatedData['body']
         ]);
 
-        event(new AddNewPost($post));
-
+        // event(new AddNewPost($post));
+        ProcessBlog::dispatch($post);
         return redirect(route('posts.index'));
     }
 
@@ -154,7 +155,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (\auth()->check() && $post->user_id === auth()->user()->id) {
+        if (auth()->user()->is_admin === 1 || \auth()->check() && $post->user_id === auth()->user()->id) {
             return view('post-edit', compact('post'));
         }
         return redirect('/posts')->withErrors("You can't edit this post");
@@ -169,9 +170,6 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //dd($request);
-        //$post = Post::find($id);
-
         $validated = $request->validated();
         $post->title = $validated['title'];
         $post->body = $validated['body'];
@@ -188,7 +186,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (\auth()->check() && $post->user_id === auth()->user()->id) {
+        if (auth()->user()->is_admin === 1 || \auth()->check() && $post->user_id === auth()->user()->id) {
             $post->delete();
             return redirect('/posts');
         }

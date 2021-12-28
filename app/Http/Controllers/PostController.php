@@ -14,6 +14,7 @@ use App\Models\User;
 use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -118,7 +119,8 @@ class PostController extends Controller
             'body' => $validatedData['body']
         ]);
 
-        // event(new AddNewPost($post));
+        event(new AddNewPost($post));
+        //Artisan::call('post:process 1 --queue');
         ProcessBlog::dispatch($post);
         return redirect(route('posts.index'));
     }
@@ -128,11 +130,15 @@ class PostController extends Controller
      *
      * @param int $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @throws \Exception
      */
     public function show($id, Request $request)
     {
-        //$post = Post::where('id', '=', $id)->with('like', 'comments', 'commentLikes')->first(); //todo !!!!
-        $post = Post::findOrFail($id);
+        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {
+            var_dump("post$id");
+                return Post::findOrFail($id);
+        });
+
         $postLikes = Like::where('post_id', $post->id)->count();
         $comments = Comment::where('post_id', $post->id)->get();
         $comment_ids = $comments->map(fn($item) => $item->id);
@@ -143,7 +149,7 @@ class PostController extends Controller
                 $carry[$item->comment_id] = $item->number_of_likes;
                 return $carry;
             }, []);
-        //dd($commentLikes);
+
         return view('one-post', compact('post', 'postLikes', 'comments', 'commentLikes'));
     }
 
@@ -175,7 +181,9 @@ class PostController extends Controller
         $post->body = $validated['body'];
         $post->save();
 
-        return redirect()->back();
+        cache()->put("post$post->id", $post);
+
+        return redirect('/posts');
     }
 
     /**

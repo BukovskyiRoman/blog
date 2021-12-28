@@ -7,14 +7,15 @@
     "require": {
         "php": "^7.4|^8.0",
         "ext-http": "*",
+        "ext-pdo": "*",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "itsgoingd/clockwork": "^5.1",
         "laravel/framework": "^8.65",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "predis/predis": "^1.1",
-        "pusher/pusher-php-server": "^5.0.3",
-      "ext-pdo": "*"
+        "pusher/pusher-php-server": "^5.0.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

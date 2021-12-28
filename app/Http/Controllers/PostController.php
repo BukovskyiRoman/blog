@@ -201,4 +201,8 @@ class PostController extends Controller
         return redirect('/posts')->withErrors("You can't delete this post");
     }
 
+    public function getRandomPost() {
+
+        return view('create-random-post');
+    }
 }

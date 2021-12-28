@@ -1,7 +1,8 @@
 @extends('layout')
 
 @section('content')
-    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative">
+    <div
+        style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative">
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -24,6 +25,10 @@
                               name="body"></textarea>
                     <button style="margin: 10px" type="submit" class="btn btn-primary">Add post</button>
                 </form>
+
+
+                <a href="/create-random-post"><button style="margin: 10px" type="submit" class="btn btn-primary">Random post</button></a>
+
             </div>
         @endauth
     </div>
@@ -39,7 +44,7 @@
                 </p>
             </div>
         @endif
-{{--            {{dd($options)}}--}}
+        {{--            {{dd($options)}}--}}
         <form action="{{route('posts.index')}}" method="GET">
             <select name="sort">
                 <option value="desc" @if ($options['sort'] === 'desc') selected @endif> newest</option>
@@ -129,7 +134,7 @@
             </div>
         @endforeach
 
-{{--            {{dd($posts->links())}}--}}
+        {{--            {{dd($posts->links())}}--}}
         <div class="container" style="margin: 50px auto; padding-left: 30%">
             {{ $posts->links() }}
         </div>

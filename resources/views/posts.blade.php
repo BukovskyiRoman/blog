@@ -20,15 +20,11 @@
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
                            aria-label=".form-control-lg example" name="title">
-                    <textarea style="margin-top: 10px" class="form-control" id="exampleFormControlTextarea1" rows="3"
-                              placeholder="Text"
-                              name="body"></textarea>
+                    <textarea style="margin-top: 10px" class="form-control" id="textareaEditor" rows="3"
+                              placeholder=""
+                              name="body">{{$loremIpsumText}} </textarea>
                     <button style="margin: 10px" type="submit" class="btn btn-primary">Add post</button>
                 </form>
-
-
-                <a href="/create-random-post"><button style="margin: 10px" type="submit" class="btn btn-primary">Random post</button></a>
-
             </div>
         @endauth
     </div>

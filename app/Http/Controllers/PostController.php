@@ -11,6 +11,9 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
+use App\Repositories\Interfaces\PostRepositoryInterface;
+use App\Repositories\PostRepository;
+use App\Services\LoremIpsumService;
 use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -21,55 +24,55 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    private $postRepository;
+
+    public function __construct(PostRepositoryInterface $postRepository)
+    {
+        $this->postRepository = $postRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, LoremIpsumService $loremIpsum)
     {
+        $loremIpsumText = $loremIpsum->getLoremIpsumText();
         $options = $request->all(['sort']);
 
-        $posts = Cache::remember('posts', 1, function () use ($request, $options) {                  //todo Cache в імені враховувати всі параметри адресного рядка
-            $sort = 'desc';
-            $posts = Post::query();
 
-            if ($request->has('author')) {
-                $posts = $posts->where('user_id', $request->get('author'));
-            }
+        $sort = 'desc';
+        //$posts = Post::query();
 
-            if ($request->has('sort')) {
-                if ((strcmp('max', $request->get('sort')) == 0) || (strcmp('min', $request->get('sort')) == 0)) {
-                    if (strcmp('min', $request->get('sort')) == 0) {
-                        $sort = 'asc';
-                    }
-                    $page = $request->has('page') ? $request->get('page') : 1;
-                    $perPage = 5;
-                    $posts_number = Post::query()->count();
+        if ($request->has('author')) {
+            $posts = $this->postRepository->getPostByAuthor($request->get('author'));
+            return view('posts', compact('posts', 'loremIpsumText', 'options'));
+        }
 
-                    $result = DB::table('posts AS p')                                              //todo !!!!!!!!!!!!!!!!!!!!!!!!!!
-                    ->leftJoin('likes as l', 'p.id', 'l.post_id')
-                        ->select(['p.id', DB::raw('count(distinct l.id) AS post_likes')])
-                        ->groupBy('p.id')
-                        ->orderBy('post_likes', $sort)
-                        ->take($perPage)->skip(($page - 1) * $perPage)
-                        ->get()->map(function ($item) {
-                            return Post::where('id', $item->id)->first();
-                        });
-                    return (new LengthAwarePaginator($result, $posts_number, $perPage, $page))              //todo !!!!!!!!!!!!!
-                    ->withPath(route('posts.index'))
-                        ->appends($options);
-                } else {
-                    $sort = $request->get('sort');
+        if ($request->has('sort')) {
+            if ((strcmp('max', $request->get('sort')) == 0) || (strcmp('min', $request->get('sort')) == 0)) {
+                if (strcmp('min', $request->get('sort')) == 0) {
+                    $sort = 'asc';
                 }
+                $page = $request->has('page') ? $request->get('page') : 1;
+                $perPage = 5;
+                $posts_number = Post::query()->count();
+
+                $result = $this->postRepository->getSortedPostByLikes($sort, $page, $perPage);
+
+                $posts = (new LengthAwarePaginator($result, $posts_number, $perPage, $page))              //todo !!!!!!!!!!!!!
+                ->withPath(route('posts.index'))
+                    ->appends($options);
+                return view('posts', compact('posts', 'loremIpsumText', 'options'));
+            } else {
+                $sort = $request->get('sort');
             }
-            return $posts->orderBy('created_at', $sort)
-                ->with('comments', 'author', 'like')
-                ->simplePaginate(5);
-        });
+        }
+        $posts = $this->postRepository->getSortedPostsByDate($sort);
 
         if (\auth()->check()) {
-            return view('posts', compact('posts', 'options'));
+            return view('posts', compact('posts', 'options', 'loremIpsumText'));
         }
 
         if ($request->hasCookie('guest')) {
@@ -89,9 +92,8 @@ class PostController extends Controller
                 ]);
             }
         }
-
         $cookie = cookie('guest', $id);
-        return response()->view('posts', ['posts' => $posts, 'options' => $options])->withCookie($cookie);
+        return response()->view('posts', compact('posts', 'options', 'loremIpsumText'))->withCookie($cookie);
     }
 
     /**
@@ -134,9 +136,9 @@ class PostController extends Controller
      */
     public function show($id, Request $request)
     {
-        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {
+        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {  //todo Cache в імені враховувати всі параметри адресного рядка
             var_dump("post$id");
-                return Post::findOrFail($id);
+            return Post::findOrFail($id);
         });
 
         $postLikes = Like::where('post_id', $post->id)->count();
@@ -161,7 +163,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->user()->is_admin === 1 || \auth()->check() && $post->user_id === auth()->user()->id) {
+        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
             return view('post-edit', compact('post'));
         }
         return redirect('/posts')->withErrors("You can't edit this post");
@@ -194,15 +196,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (auth()->user()->is_admin === 1 || \auth()->check() && $post->user_id === auth()->user()->id) {
+        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
             $post->delete();
             return redirect('/posts');
         }
         return redirect('/posts')->withErrors("You can't delete this post");
-    }
-
-    public function getRandomPost() {
-
-        return view('create-random-post');
     }
 }

@@ -22,14 +22,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('create-random-post', [PostController::class, 'getRandomPost']);
-
-
-Route::get('/random-post', function () {
-    $randomText = Http::get('http://loripsum.net/api')->body();
-
-    return view('create-random-post', compact('randomText'));
-});
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('profile', [UserController::class, 'showAdminPanel'])->name('admin.profile');

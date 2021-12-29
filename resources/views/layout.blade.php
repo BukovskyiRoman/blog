@@ -6,6 +6,14 @@
     <script defer src="https://unpkg.com/alpinejs@3.2.4/dist/cdn.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
+    <script src="https://cdn.tiny.cloud/1/j47r7hh3zgfukjuzev2q82rzeafkr56kbwi00ud49mxhvdhh/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#textareaEditor',
+            width: 600,
+            height: 300,
+        });
+    </script>
 
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
     <script>
@@ -36,13 +44,13 @@
             };
             setTimeout(handler, 7000);
         });
-
     </script>
 </head>
 
 <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 65%">
     <a style="text-decoration: none; margin-left: 15px" href="/posts"><h1>Blog</h1></a>
-    <a href="@if(auth()->check() && auth()->user()->is_admin === 1) {{route('admin.profile')}} @else {{route('profile')}} @endif" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
+    <a href="@if(auth()->check() && auth()->user()->is_admin === 1) {{route('admin.profile')}} @else {{route('profile')}} @endif"
+       style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
     <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
     <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
 </div>
@@ -51,7 +59,6 @@
 
 
 <script type="text/javascript">
-
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -87,4 +94,6 @@
             }
         });
     });
+
+
 </script>

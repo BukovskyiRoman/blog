@@ -25,7 +25,7 @@ class UpdatePostRequest extends FormRequest
     {
         return [
             'title' => ['required', 'between:5,70'],
-            'body' => ['required', 'between:5,255'],
+            'body' => ['required', 'between:5,10000'],
         ];
     }
 }

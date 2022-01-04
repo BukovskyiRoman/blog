@@ -15,12 +15,14 @@ use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\PostRepository;
 use App\Services\LoremIpsumService;
 use http\Cookie;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class PostController extends Controller
 {
@@ -29,6 +31,7 @@ class PostController extends Controller
     public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->postRepository = $postRepository;
+        $this->authorizeResource(Post::class, 'post');
     }
 
     /**
@@ -40,7 +43,6 @@ class PostController extends Controller
     {
         $loremIpsumText = $loremIpsum->getLoremIpsumText();
         $options = $request->all(['sort']);
-
 
         $sort = 'desc';
         //$posts = Post::query();
@@ -163,10 +165,12 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
-            return view('post-edit', compact('post'));
-        }
-        return redirect('/posts')->withErrors("You can't edit this post");
+//        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
+//            return view('post-edit', compact('post'));
+//        }
+
+        return view('post-edit', compact('post'));
+        //return redirect('/posts')->withErrors("You can't edit this post");
     }
 
     /**
@@ -178,6 +182,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        $this->authorize('update', $post);
         $validated = $request->validated();
         $post->title = $validated['title'];
         $post->body = $validated['body'];
@@ -196,10 +201,12 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
-            $post->delete();
-            return redirect('/posts');
-        }
-        return redirect('/posts')->withErrors("You can't delete this post");
+//        if (! Gate::allows('delete-post', $post)) {
+//            //return Response::deny('Action denied');
+//            return redirect('/posts')->withErrors("You can't delete this post");
+//        }
+
+        $post->delete();
+        return redirect('/posts');
     }
 }

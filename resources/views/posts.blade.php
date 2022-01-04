@@ -20,10 +20,10 @@
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
                            aria-label=".form-control-lg example" name="title">
-                    <textarea style="margin-top: 10px" class="form-control" id="textareaEditor" rows="3"
-                              placeholder=""
-                              name="body">{{$loremIpsumText}} </textarea>
+                    <textarea style="margin-top: 10px" class="form-control" id="textareaEditor" rows="3" name="body">{{$loremIpsumText}} </textarea>
+
                     <button style="margin: 10px" type="submit" class="btn btn-primary">Add post</button>
+                    <button style="margin: 10px" onclick="clearBox('textareaEditor')" class="btn btn-primary" type="button">Clear</button>
                 </form>
             </div>
         @endauth
@@ -120,10 +120,8 @@
                         @csrf
                         <textarea style="margin-top: 10px" class="form-control" rows="3"
                                   placeholder="Add comment" name="comment"></textarea>
-                        <button style="margin: 10px" type="submit" class="btn btn-primary"
-                                id="{{$post->id}}">Add comment
-                        </button>
-                        <textarea style="visibility: hidden" name="id">{{$post->id}}</textarea>
+                        <button style="margin: 10px" type="submit" class="btn btn-primary" id="{{$post->id}}">Add comment</button>
+{{--                        <textarea style="visibility: hidden" name="id">{{$post->id}}</textarea>--}}
                     </form>
                 </div>
 
@@ -135,9 +133,5 @@
             {{ $posts->links() }}
         </div>
     </div>
-
-
-
-
 @endsection
 

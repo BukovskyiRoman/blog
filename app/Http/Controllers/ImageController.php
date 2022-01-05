@@ -37,9 +37,16 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        $path = $request->file('avatar')->store('public/avatars');
+        //$path = Storage::disk('s3')->put("avatars/".$request->user()->id, $request->file('avatar'));
+
+       // dd($path);
+        $path = $request->file('avatar')->store('avatars', 's3');
+        Storage::disk('s3')->setVisibility($path, 'public');
+
+        //dd(Storage::disk('s3')->url($path));
         Image::create([
-            'name' => $path,
+            'name' => basename($path),
+            'url' => Storage::disk('s3')->url($path),
             'user_id' => $request->user()->id,
         ]);
 

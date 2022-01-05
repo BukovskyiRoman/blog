@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Symfony\Component\Routing\Route;
 
 class PostController extends Controller
 {
@@ -30,8 +31,8 @@ class PostController extends Controller
 
     public function __construct(PostRepositoryInterface $postRepository)
     {
-        $this->postRepository = $postRepository;
         $this->authorizeResource(Post::class, 'post');
+        $this->postRepository = $postRepository;
     }
 
     /**
@@ -136,12 +137,13 @@ class PostController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      * @throws \Exception
      */
-    public function show($id, Request $request)
+    public function show($id)
     {
-        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {  //todo Cache в імені враховувати всі параметри адресного рядка
-            var_dump("post$id");
-            return Post::findOrFail($id);
-        });
+//        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {  //todo Cache в імені враховувати всі параметри адресного рядка
+//            var_dump("cache post$id");
+//            return Post::findOrFail($id);
+//        });
+        $post = Post::findOrFail($id);
 
         $postLikes = Like::where('post_id', $post->id)->count();
         $comments = Comment::where('post_id', $post->id)->get();
@@ -182,7 +184,6 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $this->authorize('update', $post);
         $validated = $request->validated();
         $post->title = $validated['title'];
         $post->body = $validated['body'];

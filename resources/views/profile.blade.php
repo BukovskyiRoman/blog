@@ -60,7 +60,9 @@
                          alt="alt text">
                 @else
                     <img style="margin-left: 15%; height: 280px; border-radius: 10px"
-                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url(''. $user->image->name)}}"
+{{--                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url(''. $user->image->name)}}"--}}
+{{--                         src="{{\Illuminate\Support\Facades\Storage::disk('s3')->url($user->image->name)}}"--}}
+                         src="{{\Illuminate\Support\Facades\Storage::disk('s3')->url($user->image->url)}}"
                          alt="alt text">
                 @endif
             </div>

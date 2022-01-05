@@ -116,12 +116,12 @@
                     @endforeach
 
                     <form method="POST" style="margin-left: 2%; display: block; margin-top: 1%"
-                          action="{{route('comments.store')}}">
+                          action="{{route('comments.store', $post->id)}}">
                         @csrf
                         <textarea style="margin-top: 10px" class="form-control" rows="3"
                                   placeholder="Add comment" name="comment"></textarea>
                         <button style="margin: 10px" type="submit" class="btn btn-primary" id="{{$post->id}}">Add comment</button>
-{{--                        <textarea style="visibility: hidden" name="id">{{$post->id}}</textarea>--}}
+                        <textarea style="visibility: hidden" name="id">{{$post->id}}</textarea>
                     </form>
                 </div>
 

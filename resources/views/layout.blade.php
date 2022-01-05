@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <head>
+    <script src="{{URL::asset('js/app.js')}}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -32,33 +33,7 @@
     </script>
 
     <script>
-        var pusher = new Pusher('2d98b5d868d66f6639a7', {
-            cluster: 'eu'
-        });
 
-        var channel = pusher.subscribe('test');
-        channel.bind('App\\Events\\AddNewPost', function (data) {
-            document.location.reload();
-        });
-
-        const page_load_time = parseInt((new Date().getTime() / 1000).toFixed(0));
-        window.addEventListener('load', (event) => {
-            const handler = function () {
-                $.ajax({
-                    type: 'GET',
-                    url: "/comments/info?ts=" + page_load_time,
-                    success: function (data) {
-                        if (data.is_modified) {
-                            document.location.reload();
-                        } else {
-                            setTimeout(handler, 7000);
-                        }
-                    }
-                });
-
-            };
-            setTimeout(handler, 7000);
-        });
 
         function clearBox(elementID)
         {

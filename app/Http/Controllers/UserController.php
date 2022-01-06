@@ -15,12 +15,22 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
+    public function changeStatus(Request $request) {
+        $user = User::findOrFail($request->user_id);
+        $user->moderator = $request->status;
+        $user->save();
+
+        return response()->json(['message' => 'User status updated successfully.']);
+    }
+
+
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show() {
         $user = User::where('id', Auth::user()->id)->with('image', 'posts')->first();
-        return view('profile', compact('user'));
+        $users = User::all();
+        return view('profile', compact('user', 'users'));
     }
 
     /**

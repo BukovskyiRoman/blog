@@ -11,6 +11,10 @@
             src="https://cdn.tiny.cloud/1/j47r7hh3zgfukjuzev2q82rzeafkr56kbwi00ud49mxhvdhh/tinymce/5/tinymce.min.js"
             referrerpolicy="origin">
     </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
 
@@ -40,11 +44,28 @@
             document.getElementById(elementID).innerHTML = "";
         }
     </script>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 
 <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 65%">
     <a style="text-decoration: none; margin-left: 15px" href="/posts"><h1>Blog</h1></a>
-    <a href="@if(auth()->check() && auth()->user()->is_admin === 1) {{route('admin.profile')}} @else {{route('profile')}} @endif"
+    <a href="@if(auth()->check() && auth()->user()->is_admin) {{route('admin.profile')}} @else {{route('profile')}} @endif"
        style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
     <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
     <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
@@ -89,6 +110,34 @@
             }
         });
     });
+
+
+    let elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+        elems.forEach(function(html) {
+            let switchery = new Switchery(html,  { size: 'small' });
+        });
+
+
+    $(document).ready(function(){                           //change user status on moderator
+        $('.js-switch').change(function () {
+            let status = $(this).prop('checked') === true ? 1 : 0;
+            let userId = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: '{{ route('change-status') }}',
+                data: {'status': status, 'user_id': userId},
+                success: function (data) {
+                    toastr.options.closeButton = true;        // add success message about status change
+                    toastr.options.closeMethod = 'fadeOut';
+                    toastr.options.closeDuration = 100;
+                    toastr.success(data.message);
+                }
+            });
+        });
+    });
+
 
 
 </script>

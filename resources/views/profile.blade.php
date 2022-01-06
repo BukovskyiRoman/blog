@@ -60,13 +60,11 @@
                          alt="alt text">
                 @else
                     <img style="margin-left: 15%; height: 280px; border-radius: 10px"
-{{--                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url(''. $user->image->name)}}"--}}
-{{--                         src="{{\Illuminate\Support\Facades\Storage::disk('s3')->url($user->image->name)}}"--}}
-                         src="{{\Illuminate\Support\Facades\Storage::disk('s3')->url($user->image->url)}}"
-                         alt="alt text">
+                         src="{{$user->image->url}}"
+                         alt="user avatar">
                 @endif
             </div>
-            <form style="margin: 0" method="POST" action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', 26)}} @endif" enctype="multipart/form-data">
+            <form style="margin: 0" method="POST" action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', $user->image->id)}} @endif" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     @if($user->image === null)
@@ -101,7 +99,29 @@
             </div>
 
         </div>
+    </div>
 
+
+    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
+  border-radius: 10px; padding: 10px; margin-top: 2%">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Moderator</th>
+            </tr>
+            @foreach($users as $user)
+                <tr>
+                    <th>{{$user->name}}</th>
+                    <th>{{$user->email}}</th>
+                    <th>
+                        <input type="checkbox" data-id="{{ $user->id }}" name="status" class="js-switch" {{ $user->moderator == 1 ? 'checked' : '' }}>
+                    </th>
+                </tr>
+            @endforeach
+        </table>
 
     </div>
+
+
 @endsection

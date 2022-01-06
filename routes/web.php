@@ -41,6 +41,7 @@ Route::resource('/images', ImageController::class);
 Route::get('/profile', [UserController::class, 'show'])->middleware(['auth'])->name('profile');
 Route::post('change-password', [UserController::class, 'changePassword'])->name('change.password');
 Route::post('change-name', [UserController::class, 'changeUserNAme'])->name('change.user.name');
+Route::get('/user/change/status', [UserController::class, 'changeStatus'])->name('change-status');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -37,13 +37,14 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        //$path = Storage::disk('s3')->put("avatars/".$request->user()->id, $request->file('avatar'));
+        $validated = $request->validate([
+            'avatar' => 'required|file|image|mimes:jpeg,png,gif,jpg|max:2048'
+        ]);
+        //dd($validated['avatar']);
 
-       // dd($path);
-        $path = $request->file('avatar')->store('avatars', 's3');
+        $path = $validated['avatar']->store('avatars/' . $request->user()->id, 's3');
         Storage::disk('s3')->setVisibility($path, 'public');
 
-        //dd(Storage::disk('s3')->url($path));
         Image::create([
             'name' => basename($path),
             'url' => Storage::disk('s3')->url($path),
@@ -61,7 +62,7 @@ class ImageController extends Controller
      */
     public function show($id)
     {
-        //
+        dd('show image');
     }
 
     /**
@@ -72,7 +73,7 @@ class ImageController extends Controller
      */
     public function edit($id)
     {
-        dd('edit');
+        dd($id);
     }
 
     /**
@@ -80,11 +81,21 @@ class ImageController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, $id)
     {
-        //
+        Storage::disk('s3')->delete('avatars/' . $request->user()->id . '/' . $request->user()->image->name);
+
+        $path = $request->file('avatar')->store('avatars/' . $request->user()->id, 's3');
+
+        Image::where('id', $id)->update([
+            'name' => basename($path),
+            'url' => Storage::disk('s3')->url($path),
+            'user_id' => $request->user()->id,
+        ]);
+
+        return redirect()->back();
     }
 
     /**

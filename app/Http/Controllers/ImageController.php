@@ -40,7 +40,7 @@ class ImageController extends Controller
         $validated = $request->validate([
             'avatar' => 'required|file|image|mimes:jpeg,png,gif,jpg|max:2048'
         ]);
-        //dd($validated['avatar']);
+
 
         $path = $validated['avatar']->store('avatars/' . $request->user()->id, 's3');
         Storage::disk('s3')->setVisibility($path, 'public');

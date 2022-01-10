@@ -60,11 +60,13 @@
                          alt="alt text">
                 @else
                     <img style="margin-left: 15%; height: 280px; border-radius: 10px"
-                         src="{{$user->image->url}}"
-                         alt="user avatar">
+                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url(''. $user->image->name)}}"
+                         alt="alt text">
                 @endif
             </div>
-            <form style="margin: 0" method="POST" action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', $user->image->id)}} @endif" enctype="multipart/form-data">
+            <form style="margin: 0" method="POST"
+                  action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', 26)}} @endif"
+                  enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     @if($user->image === null)
@@ -83,8 +85,6 @@
                     @endif
                 </div>
             </form>
-
-
         </div>
 
         <div style="margin-left: 3%; border: solid #4a5568; border-radius: 10px; height: 29.7em; width: 45em;">
@@ -97,58 +97,17 @@
                     </ul>
                 @endforeach
             </div>
-
         </div>
     </div>
 
     <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
-  border-radius: 10px; padding: 10px; margin-top: 2%">
-
-        <form style="margin: 0" method="POST" action="{{route('upload.video')}}" enctype="multipart/form-data">
-            @csrf
-            <div class="m-3">
-                    <label for="formFile" class="form-label">Download file</label>
-                    <input class="form-control" type="file" id="" name="video">
-                    <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
-                        Download
-                    </button>
-            </div>
-        </form>
-
-    </div>
-
-    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
-  border-radius: 10px; padding: 10px; margin-top: 2%">
-
-        <div class="media">
-            <div class="media-body">
-                <iframe width="560" height="315" src="https://blog-06012022.s3.eu-central-1.amazonaws.com/video.mp4" frameborder="0" allowfullscreen>
-                </iframe>
-            </div>
+            border-radius: 10px; padding: 10px; margin-top: 2%">
+        <div>
+            <ul>
+                @foreach($users as $user)
+                    <li>{{$user->name}}</li>
+                @endforeach
+            </ul>
         </div>
-
     </div>
-
-    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
-  border-radius: 10px; padding: 10px; margin-top: 2%">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Moderator</th>
-            </tr>
-            @foreach($users as $user)
-                <tr>
-                    <th>{{$user->name}}</th>
-                    <th>{{$user->email}}</th>
-                    <th>
-                        <input type="checkbox" data-id="{{ $user->id }}" name="status" class="js-switch" {{ $user->moderator == 1 ? 'checked' : '' }}>
-                    </th>
-                </tr>
-            @endforeach
-        </table>
-
-    </div>
-
-
 @endsection

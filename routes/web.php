@@ -7,6 +7,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VideoController;
 use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -26,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('profile', [UserController::class, 'showAdminPanel'])->name('admin.profile');
 });
+
+Route::post('video/upload', [VideoController::class, 'upload'])->name('upload.video');
 
 Route::get('/comments/info', [CommentController::class, 'checkAddComment']);
 Route::post('/like/post', [LikeController::class, 'likePost']);

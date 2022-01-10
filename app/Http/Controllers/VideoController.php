@@ -12,12 +12,24 @@ use Aws\Exception\AwsException;
 use FFMpeg\FFMpeg;
 use Illuminate\Http\Request;
 use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 
 class VideoController extends Controller
 {
     public function upload(Request $request)
     {
+        $process = new Process(['sh /home/bandapixels/blog/bash.sh']);
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+
+        echo $process->getOutput();
+
         $path = $request->file('video')->path();
 
         $s3Client = new S3Client([

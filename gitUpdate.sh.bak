@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#!/bin/bash
+
 ffmpeg -i brooklynsfinest_clip_1080p.mp4 \
 -filter_complex \
 "[0:v]split=3[v1][v2][v3]; \

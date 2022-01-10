@@ -120,12 +120,7 @@
     <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
   border-radius: 10px; padding: 10px; margin-top: 2%">
 
-        <div class="media">
-            <div class="media-body">
-                <iframe width="560" height="315" src="https://blog-06012022.s3.eu-central-1.amazonaws.com/video.mp4" frameborder="0" allowfullscreen>
-                </iframe>
-            </div>
-        </div>
+
 
     </div>
 

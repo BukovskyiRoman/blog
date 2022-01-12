@@ -1,6 +1,9 @@
 <!DOCTYPE HTML>
 <head>
     <script src="{{URL::asset('js/app.js')}}"></script>
+
+    <link href="https://vjs.zencdn.net/7.17.0/video-js.css" rel="stylesheet" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -11,6 +14,7 @@
             src="https://cdn.tiny.cloud/1/j47r7hh3zgfukjuzev2q82rzeafkr56kbwi00ud49mxhvdhh/tinymce/5/tinymce.min.js"
             referrerpolicy="origin">
     </script>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -21,7 +25,7 @@
     <script type="text/javascript">
         tinymce.init({
             selector: '#textareaEditor',
-            width: 1190,
+            width: 917,
             height: 300,
             plugins: [
                 'advlist autolink link image lists charmap print preview hr anchor pagebreak',
@@ -63,12 +67,19 @@
     </style>
 </head>
 
-<div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 65%">
-    <a style="text-decoration: none; margin-left: 15px" href="/posts"><h1>Blog</h1></a>
+<div style="display: flex; align-items: center; margin-left: 26%; margin-right: auto;    width: 35%">
+    <a style="text-decoration: none;" href="/posts"><p style="letter-spacing: 5px; font-size: 3em">Blog</p></a>
     <a href="@if(auth()->check() && auth()->user()->is_admin) {{route('admin.profile')}} @else {{route('profile')}} @endif"
        style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
     <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
     <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
+
+
+    <div style="position:absolute; border: solid 2px rgba(224,255,255,0.59); border-radius: 10px;
+    margin-left: 51%; margin-top: 23.7%; width: 21%; height: 35%; padding: 10px">
+        @widget('WeatherWidget')
+    </div>
+
 </div>
 
 @yield('content')

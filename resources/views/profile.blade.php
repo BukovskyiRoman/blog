@@ -64,7 +64,9 @@
                          alt="user avatar">
                 @endif
             </div>
-            <form style="margin: 0" method="POST" action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', $user->image->id)}} @endif" enctype="multipart/form-data">
+            <form style="margin: 0" method="POST"
+                  action="@if($user->image === null) {{route('images.store')}} @else {{route('images.update', $user->image->id)}} @endif"
+                  enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     @if($user->image === null)
@@ -107,22 +109,30 @@
         <form style="margin: 0" method="POST" action="{{route('upload.video')}}" enctype="multipart/form-data">
             @csrf
             <div class="m-3">
-                    <label for="formFile" class="form-label">Download file</label>
-                    <input class="form-control" type="file" id="" name="video">
-                    <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
-                        Download
-                    </button>
+                <label for="formFile" class="form-label">Download file</label>
+                <input class="form-control" type="file" id="" name="video">
+                <button type="submit" class="btn btn-light" style="margin-top: 12px; height: 100%; width: 100%">
+                    Download
+                </button>
             </div>
         </form>
 
     </div>
 
     <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
-  border-radius: 10px; padding: 10px; margin-top: 2%">
+  border-radius: 10px;; margin-top: 2%">
+
+        <video style="margin-left: auto; margin-right: auto" id="my-video" class="video-js"
+            controls preload="auto" width="640"
+               loop="true" muted="true"
+            data-setup="{}" >
+            <source src="{{\Illuminate\Support\Facades\Storage::disk('local')->url('videos/adaptive_video.m3u8')}}" type="application/x-mpegURL" />
+        </video>
 
 
-
+        <script src="https://vjs.zencdn.net/7.17.0/video.min.js"></script>
     </div>
+
 
     <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative; background-color: #cbd5e0;
   border-radius: 10px; padding: 10px; margin-top: 2%">
@@ -137,7 +147,8 @@
                     <th>{{$user->name}}</th>
                     <th>{{$user->email}}</th>
                     <th>
-                        <input type="checkbox" data-id="{{ $user->id }}" name="status" class="js-switch" {{ $user->moderator == 1 ? 'checked' : '' }}>
+                        <input type="checkbox" data-id="{{ $user->id }}" name="status"
+                               class="js-switch" {{ $user->moderator == 1 ? 'checked' : '' }}>
                     </th>
                 </tr>
             @endforeach

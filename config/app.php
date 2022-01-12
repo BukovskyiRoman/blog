@@ -167,6 +167,8 @@ return [
 
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
 
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
@@ -235,7 +237,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 
     ],
 

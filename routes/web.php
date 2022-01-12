@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\AddNewPost;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ImageController;
@@ -8,10 +7,8 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
-use App\Models\Like;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\Auth\GoogleAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +20,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/auth/redirect', [GoogleAuthController::class, 'redirectToProvider'])->name('google_auth');
+Route::get('/auth/callback', [GoogleAuthController::class, 'handleProviderCallback']);
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('profile', [UserController::class, 'showAdminPanel'])->name('admin.profile');
 });
 
 Route::post('video/upload', [VideoController::class, 'upload'])->name('upload.video');
+Route::get('video/encode', [VideoController::class, 'encodeVideo']);
 
 Route::get('/comments/info', [CommentController::class, 'checkAddComment']);
 Route::post('/like/post', [LikeController::class, 'likePost']);

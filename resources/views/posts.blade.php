@@ -2,7 +2,7 @@
 
 @section('content')
     <div
-        style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 65%; position: relative">
+        style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 50%; position: relative">
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -29,7 +29,7 @@
         @endauth
     </div>
 
-    <div style="align-items: center; margin-left: auto; margin-right: auto; width: 65%; ">
+    <div style="align-items: center; margin-left: auto; margin-right: auto; width: 50%; ">
         @if(session()->has('register'))
             <div x-data="{show:true}"
                  x-init="setTimeout(() => show = false, 4000)"

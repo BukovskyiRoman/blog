@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ffmpeg -i brooklynsfinest_clip_1080p.mp4 \
+ffmpeg -i storage/app/bbb_sunflower_1080p_30fps_normal.mp4 \
 -filter_complex \
 "[0:v]split=3[v1][v2][v3]; \
 [v1]copy[v1out]; [v2]scale=w=1280:h=720[v2out]; [v3]scale=w=640:h=360[v3out]" \

@@ -38,6 +38,7 @@ class ProcessPost extends Command
      */
     public function handle()
     {
+
         logger('add post id ' . $this->argument('post')->id);          //todo +
         $this->info($this->argument('post')->id);
 

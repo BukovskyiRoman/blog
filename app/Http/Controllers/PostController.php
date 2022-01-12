@@ -11,6 +11,7 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\TelegramNotification;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\PostRepository;
 use App\Services\LoremIpsumService;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Symfony\Component\Routing\Route;
 
 class PostController extends Controller
@@ -118,15 +120,21 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         $validatedData = $request->validated();
+
         $post = Post::create([
             'user_id' => Auth::user()->id,
             'title' => $validatedData['title'],
             'body' => $validatedData['body']
         ]);
 
+        $post->notify(new TelegramNotification());
         event(new AddNewPost($post));
         //Artisan::call('post:process 1 --queue');
+
+
         ProcessBlog::dispatch($post);
+
+
         return redirect(route('posts.index'));
     }
 

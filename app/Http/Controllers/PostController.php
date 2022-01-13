@@ -124,7 +124,7 @@ class PostController extends Controller
         $post = Post::create([
             'user_id' => Auth::user()->id,
             'title' => $validatedData['title'],
-            'body' => $validatedData['body']
+            'body' => strip_tags($validatedData['body']),
         ]);
 
         $post->notify(new TelegramNotification());

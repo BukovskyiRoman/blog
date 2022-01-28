@@ -16,7 +16,7 @@ class ImageController extends Controller
      */
     public function index()
     {
-        //
+        //todo
     }
 
     /**

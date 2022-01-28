@@ -19,7 +19,6 @@ use ProtoneMedia\LaravelFFMpeg\Exporters\HLSExporter;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-
 class VideoController extends Controller
 {
     public function upload(Request $request)
@@ -66,11 +65,11 @@ class VideoController extends Controller
         return redirect()->back();
     }
 
-    public function encodeVideo() {
-
-        $lowBitrate = (new X264)->setKiloBitrate(250);
-        $midBitrate = (new X264)->setKiloBitrate(500);
-        $highBitrate = (new X264)->setKiloBitrate(1000);
+    public function encodeVideo()
+    {
+        $lowBitrate = (new X264())->setKiloBitrate(250);
+        $midBitrate = (new X264())->setKiloBitrate(500);
+        $highBitrate = (new X264())->setKiloBitrate(1000);
 
         \ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::open('video.mp4')
             ->exportForHLS()

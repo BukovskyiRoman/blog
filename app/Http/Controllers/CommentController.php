@@ -42,7 +42,9 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->hasCookie('guest')) $visitorId = $request->cookies->get('guest');
+        if ($request->hasCookie('guest')) {
+            $visitorId = $request->cookies->get('guest');
+        }
 
         Auth::check() ? $userId = 'user_id' : $userId = 'visitor_id';
         Auth::check() ? $id = Auth::user()->id : $id = $visitorId;
@@ -58,16 +60,6 @@ class CommentController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        dd('show');
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -124,7 +116,8 @@ class CommentController extends Controller
      * @param Request $request
      * @return bool[]
      */
-    public function checkAddComment(Request $request) {
+    public function checkAddComment(Request $request)
+    {
         $request->validate([
             'ts' => ['required', 'integer', 'min:1636899738'],
         ]);

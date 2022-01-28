@@ -14,21 +14,24 @@ class LikeController extends Controller
         if ($request->cookies->has('guest')) {
             $visitorId = $request->cookies->get('guest');
 
-            if (!(Like::where([
+            if (
+                !(Like::where([
                 ['visitor_id', '=', $visitorId],
                 ['post_id', '=', $request->post_id]
-            ])->exists())) {
+                ])->exists())
+            ) {
                 Like::create([
                     'visitor_id' => $visitorId,
                     'post_id' => $request->post_id
                 ]);
             }
         } else {
-
-            if (!(Like::where([
+            if (
+                !(Like::where([
                 ['user_id', '=', $request->user_id],
                 ['post_id', '=', $request->post_id]
-            ])->exists())) {
+                ])->exists())
+            ) {
                 Like::create([
                     'user_id' => $request->user_id,
                     'post_id' => $request->post_id
@@ -39,13 +42,15 @@ class LikeController extends Controller
 
     public function likeComment(Request $request)
     {
-        Auth::check() ? $userForm = 'user_id': $userForm = 'visitor_id';
-        Auth::check() ? $id = $request->user_id: $id = $request->cookies->get('guest');
+        Auth::check() ? $userForm = 'user_id' : $userForm = 'visitor_id';
+        Auth::check() ? $id = $request->user_id : $id = $request->cookies->get('guest');
 
-        if (!(Like::where([
+        if (
+            !(Like::where([
             [$userForm, '=', $id],
             ['comment_id', '=', $request->comment_id]
-        ])->exists())) {
+            ])->exists())
+        ) {
             $user = Like::create([
                 $userForm => $id,
                 'comment_id' => $request->comment_id
@@ -53,6 +58,5 @@ class LikeController extends Controller
 
             event(new UserLike($user));
         }
-
     }
 }

@@ -6,30 +6,26 @@ use App\Events\AddNewPost;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Jobs\ProcessBlog;
-use App\Listeners\SendPostInfo;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
-use App\Models\User;
 use App\Notifications\TelegramNotification;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\PostRepository;
 use App\Services\LoremIpsumService;
-use http\Cookie;
-use Illuminate\Auth\Access\Response;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Notification;
-use Symfony\Component\Routing\Route;
 
 class PostController extends Controller
 {
-    private $postRepository;
+    private PostRepositoryInterface $postRepository;
 
     public function __construct(PostRepositoryInterface $postRepository)
     {
@@ -40,7 +36,7 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @return Application|Factory|View|\Illuminate\Http\Response
      */
     public function index(Request $request, LoremIpsumService $loremIpsum)
     {
@@ -115,7 +111,7 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(StorePostRequest $request)
     {
@@ -131,9 +127,7 @@ class PostController extends Controller
         event(new AddNewPost($post));
         //Artisan::call('post:process 1 --queue');
 
-
         ProcessBlog::dispatch($post);
-
 
         return redirect(route('posts.index'));
     }
@@ -142,7 +136,7 @@ class PostController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @return Application|Factory|View|\Illuminate\Http\Response
      * @throws \Exception
      */
     public function show($id)
@@ -171,7 +165,7 @@ class PostController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function edit(Post $post)
     {
@@ -206,7 +200,7 @@ class PostController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function destroy(Post $post)
     {

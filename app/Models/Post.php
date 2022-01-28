@@ -16,29 +16,32 @@ class Post extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function comments() {
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function like() {
+    public function like(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Like::class);
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function author() {
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function commentLikes() {
+    public function commentLikes()
+    {
         return $this->hasManyThrough(Like::class, Comment::class);
     }
-
 }

@@ -20,10 +20,10 @@
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
                            aria-label=".form-control-lg example" name="title">
-                    <textarea style="margin-top: 10px" class="form-control" id="textareaEditor" rows="3" name="body">{{$loremIpsumText}} </textarea>
+                    <textarea style="margin-top: 10px" class="form-control" id="textArea" rows="7" name="body">{{$loremIpsumText}} </textarea>
 
                     <button style="margin: 10px" type="submit" class="btn btn-primary">Add post</button>
-                    <button style="margin: 10px" onclick="clearBox('textareaEditor')" class="btn btn-primary" type="button">Clear</button>
+                    <button style="margin: 10px" onclick="clearBox('textArea')" class="btn btn-primary" type="button">Clear</button>
                 </form>
             </div>
         @endauth
@@ -69,14 +69,14 @@
                     | {{count($post->like)}}</button>
 
                 @auth()
-                    <form style="position: relative; margin-left: 10%; margin-top: -4.6%" method="POST"
+                    <form style="position: relative; margin-left: 13.5%; margin-top: -5.7%" method="POST"
                           action="{{route('posts.destroy', $post->id)}}">
                         @csrf
                         @method('DELETE')
                         <button style="margin: 10px" type="submit" class="btn btn-primary">Delete</button>
                     </form>
 
-                    <form style="position: relative; margin-left: 17.5%; margin-top: -6.3%" method=""
+                    <form style="position: relative; margin-left: 23.2%; margin-top: -6.6%" method=""
                           action="{{route('posts.edit', $post->id)}}">
                         @csrf
                         <button style="margin: 10px" type="submit" class="btn btn-primary">Edit</button>

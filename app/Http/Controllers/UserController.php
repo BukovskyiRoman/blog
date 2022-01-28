@@ -15,7 +15,8 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function changeStatus(Request $request) {
+    public function changeStatus(Request $request)
+    {
         $user = User::findOrFail($request->user_id);
         $user->moderator = $request->status;
         $user->save();
@@ -27,7 +28,8 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function show() {
+    public function show()
+    {
         $user = User::where('id', Auth::user()->id)->with('image', 'posts')->first();
         $users = User::all();
         return view('profile', compact('user', 'users'));
@@ -37,14 +39,15 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function changePassword(Request $request) {
+    public function changePassword(Request $request)
+    {
         $request->validate([
             'old_password' => ['required', new MatchOldPassword()],
             'new_password' => ['required'],
             'confirm_new_password' => ['same:new_password']
         ]);
 
-        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+        User::find(auth()->user()->id)->update(['password' => Hash::make($request->new_password)]);
         return redirect()->back();
     }
 
@@ -52,13 +55,14 @@ class UserController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function changeUserName(Request $request) {
+    public function changeUserName(Request $request)
+    {
         $request->validate([
            'name' => 'required|max:30|alpha_dash'
         ]);
 
         User::find(auth()->user()->id)->update([
-            'name'=> $request->name
+            'name' => $request->name
         ]);
 
         return redirect()->back();
@@ -67,7 +71,8 @@ class UserController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function showAdminPanel() {
+    public function showAdminPanel()
+    {
         $users = User::all();
         $user = User::where('id', Auth::user()->id)->with('image', 'posts')->first();
 

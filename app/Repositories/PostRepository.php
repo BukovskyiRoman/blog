@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Post;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use http\Env\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostRepository implements PostRepositoryInterface
@@ -33,5 +34,22 @@ class PostRepository implements PostRepositoryInterface
             ->with('comments', 'author', 'like')
             ->paginate(5)
             ->withQueryString();
+    }
+
+    public function createPost($request)
+    {
+        return Post::create([
+            'user_id' => Auth::user()->id,
+            'title' => $request->get('title'),
+            'body' => strip_tags($request->get('body')),
+        ]);
+    }
+
+    public function updatePost(Post $post, $request)
+    {
+        $post->title = $request->get('title');
+        $post->body = $request->get('body');
+        $post->save();
+        return $post;
     }
 }

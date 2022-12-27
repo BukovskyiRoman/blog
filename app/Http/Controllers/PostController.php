@@ -127,20 +127,12 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        $validatedData = $request->validated();
-
-        $post = Post::create([
-            'user_id' => Auth::user()->id,
-            'title' => $validatedData['title'],
-            'body' => strip_tags($validatedData['body']),
-        ]);
-
+        $post = $this->postRepository->createPost($request);
         $post->notify(new TelegramNotification());
         event(new AddNewPost($post));
         //Artisan::call('post:process 1 --queue');
 
         ProcessBlog::dispatch($post);
-
         return redirect(route('posts.index'));
     }
 
@@ -179,25 +171,19 @@ class PostController extends Controller
 //        }
 
         return view('post-edit', compact('post'));
-        //return redirect('/posts')->withErrors("You can't edit this post");
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * Method for post updating
+     * @param StorePostRequest $request
+     * @param Post $post
+     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(StorePostRequest $request, Post $post)
     {
-        $validated = $request->validated();
-        $post->title = $validated['title'];
-        $post->body = $validated['body'];
-        $post->save();
-
+        $post = $this->postRepository->updatePost($post, $request);
         cache()->put("post$post->id", $post);
-
         return redirect('/posts');
     }
 

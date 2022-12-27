@@ -59,4 +59,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Image::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }

@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class PostRepository implements PostRepositoryInterface
 {
-    public function getPostByAuthor($author)
+    public function getPostByAuthor($authorId)
     {
-        return Post::where('user_id', $author)->paginate(5)->withQueryString();
+        return Post::where('user_id', $authorId)->paginate(config('settings.pagination.posts'))->withQueryString();
     }
 
     public function getSortedPostByLikes($sort, $page, $perPage)
@@ -32,7 +32,7 @@ class PostRepository implements PostRepositoryInterface
     {
         return Post::orderBy('created_at', $sort)
             ->with('comments', 'author', 'like')
-            ->paginate(5)
+            ->paginate(config('settings.pagination.posts'))
             ->withQueryString();
     }
 
@@ -51,5 +51,10 @@ class PostRepository implements PostRepositoryInterface
         $post->body = $request->get('body');
         $post->save();
         return $post;
+    }
+
+    public function getPostById(int $id)
+    {
+        return Post::findOrFail($id);
     }
 }

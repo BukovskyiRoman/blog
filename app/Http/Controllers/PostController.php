@@ -68,8 +68,8 @@ class PostController extends Controller
                 if (strcmp('min', $request->get('sort')) == 0) {
                     $sort = 'asc';
                 }
-                $page = $request->has('page') ? $request->get('page') : 1;
-                $perPage = 5;
+                $page = $request->get('page', 1);
+                $perPage = config('settings.pagination.posts');
                 $posts_number = Post::query()->count();
 
                 $result = $this->postRepository->getSortedPostByLikes($sort, $page, $perPage);
@@ -110,16 +110,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -149,8 +139,7 @@ class PostController extends Controller
 //            var_dump("cache post$id");
 //            return Post::findOrFail($id);
 //        });
-        $post = Post::findOrFail($id);
-
+        $post = $this->postRepository->getPostById($id);
         $postLikes = $this->likeRepository->getLikesByPostId($post->id)->count();
         $comments = $this->commentRepository->getCommentByPostId($post->id);
         $commentLikes = $this->commentRepository->getCommentLikes($post->id);

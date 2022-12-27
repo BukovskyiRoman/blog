@@ -7,6 +7,7 @@ use http\Env\Request;
 
 interface PostRepositoryInterface
 {
+    public function getPostById(int $id);
     public function getPostByAuthor($author);
     public function getSortedPostByLikes($sort, $page, $perPage);
     public function getSortedPostsByDate($sort);

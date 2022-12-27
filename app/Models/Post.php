@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use phpDocumentor\Reflection\Types\This;
 
 class Post extends Model
 {
@@ -43,5 +45,10 @@ class Post extends Model
     public function commentLikes()
     {
         return $this->hasManyThrough(Like::class, Comment::class);
+    }
+
+    public function isAuthor()
+    {
+        return $this->user_id === Auth::user()->id;
     }
 }

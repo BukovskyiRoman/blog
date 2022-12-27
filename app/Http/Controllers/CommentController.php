@@ -21,17 +21,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        dd('index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        dd('create');
+        throw new \Exception('Not implement');
     }
 
     /**
@@ -98,13 +88,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        if (Auth::check()) {
-            $check = $comment->user_id == Auth::user()->id;
-        } else {
-            $check = $comment->visitor_id == Cookie::get('guest');
-        }
-
-        if ($check) {
+        if ($comment->isAuthor()) {
             $comment->deleteOrFail();
             return redirect('/posts');
         }

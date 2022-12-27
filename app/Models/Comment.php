@@ -6,7 +6,9 @@ use App\Events\AddNewComment;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class Comment extends Model
@@ -37,5 +39,10 @@ class Comment extends Model
      */
     public function author() {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function isAuthor()
+    {
+        return $this->user_id === Auth::user()->id || $this->visitor_id == Cookie::get('guest');
     }
 }

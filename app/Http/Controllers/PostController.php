@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Events\AddNewPost;
 use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
 use App\Jobs\ProcessBlog;
 use App\Models\Comment;
 use App\Models\Like;
@@ -16,6 +15,8 @@ use App\Repositories\Interfaces\LikeRepositoryInterface;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\LikeRepository;
 use App\Repositories\PostRepository;
+use App\Services\CookieService;
+use App\Services\Interfaces\CookieServiceInterface;
 use App\Services\LoremIpsumService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -32,17 +33,20 @@ class PostController extends Controller
     private PostRepositoryInterface $postRepository;
     private LikeRepositoryInterface $likeRepository;
     private CommentRepositoryInterface $commentRepository;
+    private CookieServiceInterface $cookieService;
 
     public function __construct(
         PostRepositoryInterface $postRepository,
         LikeRepositoryInterface $likeRepository,
-        CommentRepositoryInterface $commentRepository
+        CommentRepositoryInterface $commentRepository,
+        CookieServiceInterface $cookieService,
     )
     {
         //$this->authorizeResource(Post::class, 'post');
         $this->postRepository = $postRepository;
         $this->likeRepository = $likeRepository;
         $this->commentRepository = $commentRepository;
+        $this->cookieService = $cookieService;
     }
 
     /**
@@ -88,24 +92,8 @@ class PostController extends Controller
             return view('posts', compact('posts', 'options', 'loremIpsumText'));
         }
 
-        if ($request->hasCookie('guest')) {
-            $id = $request->cookies->get('guest');
-        } else {
-            $id = DB::table('visitors')->max('visitor_id');
-
-            if ($id === null) {
-                $id = 1;
-                DB::table('visitors')->updateOrInsert([
-                    'visitor_id' => $id,
-                ]);
-            } else {
-                $id++;
-                DB::table('visitors')->updateOrInsert([
-                    'visitor_id' => $id,
-                ]);
-            }
-        }
-        $cookie = cookie('guest', $id);
+        $guestId = $this->cookieService->setGuestCookie($request);
+        $cookie = cookie('guest', $guestId);
         return response()->view('posts', compact('posts', 'options', 'loremIpsumText'))->withCookie($cookie);
     }
 

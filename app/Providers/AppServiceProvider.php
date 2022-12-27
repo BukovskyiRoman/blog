@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CookieService;
+use App\Services\Interfaces\CookieServiceInterface;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
 //        {
 //            $this->app['request']->server->set('https', true);
 //        }
+        $this->app->bind(CookieServiceInterface::class, CookieService::class);
+        $this->app->bind(CookieService::class, function () {
+            return new CookieService();
+        });
     }
 
     /**

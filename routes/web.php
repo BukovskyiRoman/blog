@@ -20,6 +20,8 @@ use \App\Http\Controllers\Auth\GoogleAuthController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/news', [\App\Http\Livewire\Newspaper::class, 'render'])->name('news');
+
 Route::get('/auth/redirect', [GoogleAuthController::class, 'redirectToProvider'])->name('google_auth');
 Route::get('/auth/callback', [GoogleAuthController::class, 'handleProviderCallback']);
 
@@ -46,9 +48,9 @@ Route::post('change-password', [UserController::class, 'changePassword'])->name(
 Route::post('change-name', [UserController::class, 'changeUserNAme'])->name('change.user.name');
 Route::get('/user/change/status', [UserController::class, 'changeStatus'])->name('change-status');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/', function () {
+    return redirect('/posts');
+});
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');

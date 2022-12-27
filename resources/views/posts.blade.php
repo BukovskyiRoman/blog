@@ -52,8 +52,6 @@
         </form>
 
         @foreach($posts as $post)
-
-
             <div
                 style="border: solid 1px cadetblue; border-radius: 5px; margin-top: 10px; padding: 10px; position: relative">
                 <a href="{{route('posts.show', $post->id)}}"><h4>Title: {{$post->title}}</h4></a>

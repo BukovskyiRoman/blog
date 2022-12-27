@@ -10,7 +10,11 @@ use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use App\Notifications\TelegramNotification;
+use App\Repositories\CommentRepository;
+use App\Repositories\Interfaces\CommentRepositoryInterface;
+use App\Repositories\Interfaces\LikeRepositoryInterface;
 use App\Repositories\Interfaces\PostRepositoryInterface;
+use App\Repositories\LikeRepository;
 use App\Repositories\PostRepository;
 use App\Services\LoremIpsumService;
 use Illuminate\Contracts\Foundation\Application;
@@ -26,11 +30,19 @@ use Illuminate\Support\Facades\DB;
 class PostController extends Controller
 {
     private PostRepositoryInterface $postRepository;
+    private LikeRepositoryInterface $likeRepository;
+    private CommentRepositoryInterface $commentRepository;
 
-    public function __construct(PostRepositoryInterface $postRepository)
+    public function __construct(
+        PostRepositoryInterface $postRepository,
+        LikeRepositoryInterface $likeRepository,
+        CommentRepositoryInterface $commentRepository
+    )
     {
-        $this->authorizeResource(Post::class, 'post');
+        //$this->authorizeResource(Post::class, 'post');
         $this->postRepository = $postRepository;
+        $this->likeRepository = $likeRepository;
+        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -147,16 +159,9 @@ class PostController extends Controller
 //        });
         $post = Post::findOrFail($id);
 
-        $postLikes = Like::where('post_id', $post->id)->count();
-        $comments = Comment::where('post_id', $post->id)->get();
-        $comment_ids = $comments->map(fn($item) => $item->id);
-        $commentLikes = DB::table('likes')
-            ->whereIn('comment_id', $comment_ids)
-            ->select(['comment_id', DB::raw('count(*) as number_of_likes')])
-            ->groupBy('comment_id')->get()->reduce(function ($carry, $item) {
-                $carry[$item->comment_id] = $item->number_of_likes;
-                return $carry;
-            }, []);
+        $postLikes = $this->likeRepository->getLikesByPostId($post->id)->count();
+        $comments = $this->commentRepository->getCommentByPostId($post->id);
+        $commentLikes = $this->commentRepository->getCommentLikes($post->id);
 
         return view('one-post', compact('post', 'postLikes', 'comments', 'commentLikes'));
     }

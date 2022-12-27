@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
 
@@ -69,20 +70,22 @@
 
 <div style="display: flex; align-items: center; margin-left: 26%; margin-right: auto;    width: 35%">
     <a style="text-decoration: none;" href="/posts"><p style="letter-spacing: 5px; font-size: 3em">Blog</p></a>
+    <a href="/news">News</a>
     <a href="@if(auth()->check() && auth()->user()->is_admin) {{route('admin.profile')}} @else {{route('profile')}} @endif"
        style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
     <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
     <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
 
 
-    <div style="position:absolute; border: solid 2px rgba(224,255,255,0.59); border-radius: 10px;
-    margin-left: 51%; margin-top: 23.7%; width: 21%; height: 35%; padding: 10px">
-        @widget('WeatherWidget')
-    </div>
+{{--    <div style="position:absolute; border: solid 2px rgba(224,255,255,0.59); border-radius: 10px;--}}
+{{--    margin-left: 51%; margin-top: 23.7%; width: 21%; height: 35%; padding: 10px">--}}
+{{--        @widget('WeatherWidget')--}}
+{{--    </div>--}}
 
 </div>
 
 @yield('content')
+
 
 
 <script type="text/javascript">
@@ -148,7 +151,6 @@
             });
         });
     });
-
 
 
 </script>

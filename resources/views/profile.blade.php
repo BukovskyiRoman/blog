@@ -56,7 +56,7 @@
 
                 @if($user->image === null)
                     <img style="margin-left: 15%; height: 280px; border-radius: 10px"
-                         src="{{\Illuminate\Support\Facades\Storage::disk('local')->url('avatars/guest.jpeg')}}"
+                         src="{{Storage::disk('local')->url('avatars/guest.jpeg')}}"
                          alt="alt text">
                 @else
                     <img style="margin-left: 15%; height: 280px; border-radius: 10px"

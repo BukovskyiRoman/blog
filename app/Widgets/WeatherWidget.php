@@ -27,11 +27,11 @@ class WeatherWidget extends AbstractWidget
         $data = json_decode($data);
 
 //        dd(gettype($data->success));
-        if ($data->success) {
-            $data = $data->current;
-        }
+//        if ($data->success) {
+//            $data = $data->current;
+//        }
 
-        return view('widgets.weather_widget', [
+        return view('widgets.weather_widget', [       //todo problem ?
             'config' => $this->config,
             'weather' => $data,
         ]);

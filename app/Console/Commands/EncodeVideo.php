@@ -41,30 +41,30 @@ class EncodeVideo extends Command
      */
     public function handle()
     {
-        $lowBitrate = (new X264)->setKiloBitrate(250);
-        $midBitrate = (new X264)->setKiloBitrate(500);
-        $highBitrate = (new X264)->setKiloBitrate(1000);
-
-        FFMpeg::open('video.mp4')
-            ->exportForHLS()
-            ->setSegmentLength(10) // optional
-            ->setKeyFrameInterval(48) // optional
-            ->addFormat($lowBitrate)
-            ->addFormat($midBitrate)
-            ->addFormat($highBitrate)
-            ->onProgress(function ($progress) {
-                $this->info("Progress->  {$progress}  %");
-            })
-            ->toDisk('public')
-            ->save('videos/adaptive_video.m3u8');
-
-//        FFMpeg::open('bbb_sunflower_1080p_30fps_normal.mp4')
+//        $lowBitrate = (new X264)->setKiloBitrate(250);
+//        $midBitrate = (new X264)->setKiloBitrate(500);
+//        $highBitrate = (new X264)->setKiloBitrate(1000);
+//
+//        FFMpeg::open('video.mp4')
 //            ->exportForHLS()
+//            ->setSegmentLength(10) // optional
+//            ->setKeyFrameInterval(48) // optional
 //            ->addFormat($lowBitrate)
 //            ->addFormat($midBitrate)
 //            ->addFormat($highBitrate)
-//            ->save('encrypted_video.m3u8');
-
-        $this->info('Done!');
+//            ->onProgress(function ($progress) {
+//                $this->info("Progress->  {$progress}  %");
+//            })
+//            ->toDisk('public')
+//            ->save('videos/adaptive_video.m3u8');
+//
+////        FFMpeg::open('bbb_sunflower_1080p_30fps_normal.mp4')
+////            ->exportForHLS()
+////            ->addFormat($lowBitrate)
+////            ->addFormat($midBitrate)
+////            ->addFormat($highBitrate)
+////            ->save('encrypted_video.m3u8');
+//
+//        $this->info('Done!');
     }
 }

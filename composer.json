@@ -6,6 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.4|^8.0",
+        "ext-curl": "*",
+        "ext-http": "*",
+        "ext-json": "*",
         "ext-pdo": "*",
         "arrilot/laravel-widgets": "^3.13",
         "aws/aws-sdk-php": "^3.209",
@@ -19,15 +22,14 @@
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "*",
         "league/flysystem-cached-adapter": "~1.0",
+        "livewire/livewire": "^2.10",
         "monolog/monolog": "^2.3",
         "neutron/temporary-filesystem": "^3.0",
         "pbmedia/laravel-ffmpeg": "^7.7",
         "php-ffmpeg/php-ffmpeg": "^0.19.0",
         "predis/predis": "^1.1",
         "psr/cache": "*",
-        "pusher/pusher-php-server": "^5.0.3",
-      "ext-json": "*",
-        "ext-http": "*"
+        "pusher/pusher-php-server": "^5.0.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

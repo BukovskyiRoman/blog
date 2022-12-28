@@ -96,8 +96,6 @@
 
 @yield('content')
 
-
-
 <script type="text/javascript">
     $.ajaxSetup({
         headers: {

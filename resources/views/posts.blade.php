@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <div
-        style="display: flex; align-items: center; margin-left: auto; margin-right: auto; width: 50%; position: relative">
+    <div class="flex align-items-center mr-auto mr-auto w-full relative">
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -32,7 +31,7 @@
         @endauth
     </div>
 
-    <div style="align-items: center; margin-left: auto; margin-right: auto; width: 50%; ">
+    <div class="w-3/5 mr-auto ml-auto align-items-center">
         @if(session()->has('register'))
             <div x-data="{show:true}"
                  x-init="setTimeout(() => show = false, 4000)"
@@ -92,33 +91,36 @@
                     </form>
                 @endauth
 
-                <div>
+                <div class="container items-center justify-between mx-auto">
                     <h6 style="margin: 10px">Comments:</h6>
                     @foreach($post['comments'] as $comment)
 
-                        <div style="margin: 2px; padding: 5px; border-radius: 5px; border: solid 1px lightskyblue">
+                        <div class="border-2 p-2 ">
                             {{$comment->body}}
                         </div>
-                        <div style="position: relative; padding: 0">
-                            <button style="margin-top: 0.5%; margin-left: 0.2%; position: relative" type="submit"
-                                    class="btn btn-primary btn btn-like-comment" id="{{$comment->id}}">Like
-                                | {{count($comment->like)}}</button>
-                            <form style="position: absolute; margin-left: 12%; margin-top: -2.65%" method="POST"
+                        <div class="container flex flex-wrap items-center space-x-4 mx-auto p-2">
+                            <button type="submit"
+                                    class="btn btn-primary btn btn-like-comment" id="{{$comment->id}}">
+                                &#9829; | {{count($comment->like)}}
+                            </button>
+
+                            <form  method="POST"
                                   action="{{route('comments.destroy', $comment->id)}}">
                                 @csrf
                                 @method('DELETE')
-                                <button style="margin-top: -4.3%; margin-left: -30%; width: 10em; display: block"
+                                <button
                                         type="submit"
-                                        class="btn btn-primary">Delete
+                                        class="btn btn-primary">
+                                    &#10060;
                                 </button>
                             </form>
 
-                            <form method="POST" style="margin-left: 22.6%; margin-top: -3.3%; padding: 0; position:relative; display: block;
-"
+                            <form method="POST"
                                   action="{{route('comments.edit', $comment->id)}}">
                                 @csrf
                                 @method('GET')
-                                <button style="margin: 0; width: 10em" type="submit" class="btn btn-primary">Edit
+                                <button  type="submit" class="btn btn-primary">
+                                    &#9999;
                                 </button>
                             </form>
                         </div>
@@ -140,7 +142,7 @@
         @endforeach
 
         {{--            {{dd($posts->links())}}--}}
-        <div class="container" style="margin: 50px auto; padding-left: 30%">
+        <div class="container mt-3 mb-5">
             {{ $posts->links() }}
         </div>
     </div>

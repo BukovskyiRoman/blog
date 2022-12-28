@@ -68,21 +68,31 @@
     </style>
 </head>
 
-<div style="display: flex; align-items: center; margin-left: 26%; margin-right: auto;    width: 35%">
-    <a style="text-decoration: none;" href="/posts"><p style="letter-spacing: 5px; font-size: 3em">Blog</p></a>
-    <a href="/news">News</a>
-    <a href="@if(auth()->check() && auth()->user()->is_admin) {{route('admin.profile')}} @else {{route('profile')}} @endif"
-       style="font-size: 30px; text-decoration: none; display: flex; margin-left: 57%">Profile</a>
-    <a href="/login" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Login</a>
-    <a href="/register" style="font-size: 30px; text-decoration: none; display: flex; margin-left: 2%">Registration</a>
+<nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900 w-3/5 ml-auto mr-auto">
+    <div class="container flex flex-wrap items-center justify-between mx-auto">
+        <a href="/posts" class="flex items-center">
+            <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo" />
+            <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Blog</span>
+        </a>
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul class="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li>
+                    <a href="/news">News</a>
+                </li>
+                <li>
+                    <a href="@if(auth()->check() && auth()->user()->is_admin) {{route('admin.profile')}} @else {{route('profile')}} @endif">Profile</a>
+                </li>
+                <li>
+                    <a href="/login">Login</a>
+                </li>
+                <li>
+                    <a href="/register">Registration</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-
-{{--    <div style="position:absolute; border: solid 2px rgba(224,255,255,0.59); border-radius: 10px;--}}
-{{--    margin-left: 51%; margin-top: 23.7%; width: 21%; height: 35%; padding: 10px">--}}
-{{--        @widget('WeatherWidget')--}}
-{{--    </div>--}}
-
-</div>
 
 @yield('content')
 

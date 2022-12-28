@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Elasticsearch;
 
 class PostController extends Controller
 {
@@ -58,6 +59,28 @@ class PostController extends Controller
     {
         $loremIpsumText = $loremIpsum->getLoremIpsumText();
         $options = $request->all(['sort']);
+
+        if ($request->has('q')) {
+            $q = $request->get('q');
+            $response = Elasticsearch::search([
+                'index' => 'posts',
+                'body'  => [
+                    'query' => [
+                        'multi_match' => [
+                            'query' => $q,
+                            'fields' => [
+                                'title',
+                                'body'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $postIds = array_column($response['hits']['hits'], '_id');
+            $posts = Post::whereIn('id', $postIds)->paginate(5);
+            return view('posts', compact('posts', 'loremIpsumText', 'options'));
+        }
 
         $sort = 'desc';
         //$posts = Post::query();

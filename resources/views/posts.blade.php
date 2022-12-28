@@ -20,10 +20,13 @@
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
                            aria-label=".form-control-lg example" name="title">
-                    <textarea style="margin-top: 10px" class="form-control" id="textArea" rows="7" name="body">{{$loremIpsumText}} </textarea>
+                    <textarea style="margin-top: 10px" class="form-control" id="textArea" rows="7"
+                              name="body">{{$loremIpsumText}} </textarea>
 
                     <button style="margin: 10px" type="submit" class="btn btn-primary">Add post</button>
-                    <button style="margin: 10px" onclick="clearBox('textArea')" class="btn btn-primary" type="button">Clear</button>
+                    <button style="margin: 10px" onclick="clearBox('textArea')" class="btn btn-primary" type="button">
+                        Clear
+                    </button>
                 </form>
             </div>
         @endauth
@@ -49,6 +52,14 @@
                 <option value="min" @if ($options['sort'] === 'min') selected @endif>like(min)</option>
             </select>
             <p><input type="submit" value="Sort"></p>
+        </form>
+
+        <form class="mt-3" method="GET" action="{{route('posts.index')}}">
+            @csrf
+            <div class="mb-2">
+                <input type="search" class="form-control" id="q" name="q" value={{ request()->get('q', '') }}>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
         </form>
 
         @foreach($posts as $post)
@@ -118,7 +129,9 @@
                         @csrf
                         <textarea style="margin-top: 10px" class="form-control" rows="3"
                                   placeholder="Add comment" name="comment"></textarea>
-                        <button style="margin: 10px" type="submit" class="btn btn-primary" id="{{$post->id}}">Add comment</button>
+                        <button style="margin: 10px" type="submit" class="btn btn-primary" id="{{$post->id}}">Add
+                            comment
+                        </button>
                         <textarea style="visibility: hidden" name="id">{{$post->id}}</textarea>
                     </form>
                 </div>

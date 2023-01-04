@@ -14,7 +14,7 @@
         @endif
 
         @auth()
-            <div class="w-3/5 mr-auto ml-auto align-items-center" >
+            <div class="w-3/5 mr-auto ml-auto align-items-center">
                 <form action="{{route('posts.store')}}" method="POST">
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
@@ -71,25 +71,28 @@
                 <h6>Date: {{ $post->created_at->diffForHumans() }}</h6>
                 <p>{{\Illuminate\Support\Str::limit($post->body), 70}}</p>
 
-                @csrf
-                <button style="margin: 0.5%; position:relative;" type="submit" class="btn btn-primary btn-like"
-                        id="{{$post->id}}" onClick="reply_click(this.id)">Like post
-                    | {{count($post->like)}}</button>
+                <div class="flex pt-2">
+                    @csrf
+                    <button type="submit" class="btn btn-primary btn-like mr-3"
+                            id="{{$post->id}}" onClick="reply_click(this.id)">
+                        Like post | {{count($post->like)}}
+                    </button>
 
-                @auth()
-                    <form style="position: relative; margin-left: 13.5%; margin-top: -5.7%" method="POST"
-                          action="{{route('posts.destroy', $post->id)}}">
-                        @csrf
-                        @method('DELETE')
-                        <button style="margin: 10px" type="submit" class="btn btn-primary">Delete</button>
-                    </form>
+                    @auth()
+                        <form method="POST"
+                              action="{{route('posts.destroy', $post->id)}}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-primary mr-3">Delete</button>
+                        </form>
 
-                    <form style="position: relative; margin-left: 23.2%; margin-top: -6.6%" method=""
-                          action="{{route('posts.edit', $post->id)}}">
-                        @csrf
-                        <button style="margin: 10px" type="submit" class="btn btn-primary">Edit</button>
-                    </form>
-                @endauth
+                        <form method="POST"
+                              action="{{route('posts.edit', $post->id)}}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+                    @endauth
+                </div>
 
                 <div class="container items-center justify-between mx-auto">
                     <h6 style="margin: 10px">Comments:</h6>
@@ -104,13 +107,13 @@
                                 &#9829; | {{count($comment->like)}}
                             </button>
 
-                            <form  method="POST"
+                            <form method="POST"
                                   action="{{route('comments.destroy', $comment->id)}}">
                                 @csrf
                                 @method('DELETE')
                                 <button
-                                        type="submit"
-                                        class="btn btn-primary">
+                                    type="submit"
+                                    class="btn btn-primary">
                                     &#10060;
                                 </button>
                             </form>
@@ -119,7 +122,7 @@
                                   action="{{route('comments.edit', $comment->id)}}">
                                 @csrf
                                 @method('GET')
-                                <button  type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary">
                                     &#9999;
                                 </button>
                             </form>

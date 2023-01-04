@@ -14,7 +14,7 @@
         @endif
 
         @auth()
-            <div class="mb-3" style="width: 100%">
+            <div class="w-3/5 mr-auto ml-auto align-items-center" >
                 <form action="{{route('posts.store')}}" method="POST">
                     @csrf
                     <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
@@ -53,7 +53,7 @@
             <p><input type="submit" value="Sort"></p>
         </form>
 
-        <form class="mt-3" method="GET" action="{{route('posts.index')}}">
+        <form class="mt-3" method="GET" action="{{route('search.index')}}">
             @csrf
             <div class="mb-2">
                 <input type="search" class="form-control" id="q" name="q" value={{ request()->get('q', '') }}>
@@ -141,7 +141,6 @@
             </div>
         @endforeach
 
-        {{--            {{dd($posts->links())}}--}}
         <div class="container mt-3 mb-5">
             {{ $posts->links() }}
         </div>

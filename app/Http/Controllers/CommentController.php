@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddNewComment;
+use App\Jobs\ProcessCommentsIndex;
 use App\Models\Comment;
 use App\Models\Post;
 use Carbon\Carbon;
@@ -47,6 +48,7 @@ class CommentController extends Controller
 
         //event(new AddNewComment($comment));
 
+        ProcessCommentsIndex::dispatch();
         return redirect()->back();
     }
 
@@ -77,6 +79,7 @@ class CommentController extends Controller
         //dd($request);
         $comment->body = $request->body;
         $comment->save();
+        ProcessCommentsIndex::dispatch();
         return redirect('/posts');
     }
 
@@ -92,6 +95,7 @@ class CommentController extends Controller
             $comment->deleteOrFail();
             return redirect('/posts');
         }
+        ProcessCommentsIndex::dispatch();
         return redirect('/posts')->withErrors("You can't delete this comment!!!");
     }
 

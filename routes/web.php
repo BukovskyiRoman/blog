@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,7 @@ Route::get('/profile', [UserController::class, 'show'])->middleware(['auth'])->n
 Route::post('change-password', [UserController::class, 'changePassword'])->name('change.password');
 Route::post('change-name', [UserController::class, 'changeUserNAme'])->name('change.user.name');
 Route::get('/user/change/status', [UserController::class, 'changeStatus'])->name('change-status');
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 
 Route::get('/', function () {
     return redirect('/posts');

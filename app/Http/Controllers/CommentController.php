@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\AddNewComment;
-use App\Jobs\ProcessCommentsIndex;
 use App\Models\Comment;
-use App\Models\Post;
-use App\Services\CommentService;
 use App\Services\Interfaces\CommentServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -16,10 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {

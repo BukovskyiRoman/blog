@@ -1,10 +1,10 @@
 @extends('layout')
 
 @section('content')
-    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 80%">
+    <div class="flex align-items-center mr-auto mr-auto w-full relative">
 
 
-        <div class="mb-3" style="width: 100%">
+        <div class="w-3/5 mr-auto ml-auto align-items-center" >
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -19,10 +19,13 @@
             <form action="{{route('comments.update', $comment->id)}}" method="POST">
                 @method('PUT')
                 @csrf
-                <textarea style="margin-top: 10px" class="form-control" id="exampleFormControlTextarea1" rows="3"
+                <textarea class="form-control mt-3 p-2"
+                          id="exampleFormControlTextarea1"
+                          rows="3"
                           placeholder="Text"
-                          name="body" >{{$comment->body}}</textarea>
-                <button style="margin: 10px" type="submit" class="btn btn-primary">Edit</button>
+                          name="body">{{$comment->body}}
+                </textarea>
+                <button type="submit" class="btn btn-primary mt-2">Save</button>
             </form>
         </div>
 

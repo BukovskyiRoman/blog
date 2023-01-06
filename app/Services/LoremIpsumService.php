@@ -8,7 +8,7 @@ class LoremIpsumService
 {
     public function getLoremIpsumText(): string
     {
-        $response = Http::get('https://loripsum.net/api');
+        $response = Http::get(env('RANDOM_TEXT_URL'));
         if ($response->status() == 200) {
             return $response->body();
         }

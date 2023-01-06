@@ -93,6 +93,13 @@
     </div>
 </nav>
 
+@auth()
+    <aside class="w-1/6 absolute ml-6" aria-label="Sidebar">
+        <div class="px-3 py-4 overflow-y-auto rounded bg-gray-50 dark:bg-gray-800 border-1">
+            @widget('UsersWidget')
+        </div>
+    </aside>
+@endauth
 
 @yield('content')
 

@@ -6,8 +6,16 @@ use App\Events\AddNewComment;
 use App\Jobs\ProcessCommentsIndex;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Services\CommentService;
+use App\Services\Interfaces\CommentServiceInterface;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
@@ -15,10 +23,17 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
+    private CommentServiceInterface $commentService;
+
+    public function __construct(CommentServiceInterface $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -28,27 +43,15 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        if ($request->hasCookie('guest')) {
-            $visitorId = $request->cookies->get('guest');
-        }
-
-        Auth::check() ? $userId = 'user_id' : $userId = 'visitor_id';
-        Auth::check() ? $id = Auth::user()->id : $id = $visitorId;
-
-        $comment = Comment::create([
-            $userId => $id,
-            'body' => $request->comment,
-            'post_id' => $request->id
-        ]);
+        $comment = $this->commentService->create($request);
 
         //event(new AddNewComment($comment));
 
-        ProcessCommentsIndex::dispatch();
         return redirect()->back();
     }
 
@@ -56,47 +59,39 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
+     * @param Comment $comment
+     * @return Application|Factory|View|RedirectResponse
      */
     public function edit(Comment $comment)
     {
-        if ($comment->user_id == Auth::user()->id) {
-            return view('edit-comment', compact('comment'));
-        }
-        return redirect('posts')->withErrors("You can't edit this comment");
+        return $comment->isAuthor() ?
+            view('edit-comment', compact('comment')) :
+            redirect()->back()->withErrors("You can't edit this comment");
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param Request $request
+     * @param Comment $comment
+     * @return Application|RedirectResponse|Redirector
      */
     public function update(Request $request, Comment $comment)
     {
-        //dd($request);
-        $comment->body = $request->body;
-        $comment->save();
-        ProcessCommentsIndex::dispatch();
+        $this->commentService->update($request, $comment);
         return redirect('/posts');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param int $id
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function destroy(Comment $comment)
     {
-        if ($comment->isAuthor()) {
-            $comment->deleteOrFail();
-            return redirect('/posts');
-        }
-        ProcessCommentsIndex::dispatch();
-        return redirect('/posts')->withErrors("You can't delete this comment!!!");
+        $status = $this->commentService->destroy($comment);
+        return $status ? redirect()->back() : redirect()->back()->withErrors("You can't delete this comment");
     }
 
 

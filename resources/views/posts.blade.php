@@ -1,15 +1,15 @@
 @extends('layout')
 
 @section('content')
-{{--    @auth()--}}
-{{--    <aside class="w-1/6 absolute ml-6" aria-label="Sidebar">--}}
-{{--        <div class="px-3 py-4 overflow-y-auto rounded bg-gray-50 dark:bg-gray-800 border-1">--}}
-{{--            @foreach($posts as $post)--}}
-{{--                <h6>{{ $post->title }}</h6>--}}
-{{--            @endforeach--}}
-{{--        </div>--}}
-{{--    </aside>--}}
-{{--    @endauth--}}
+    {{--    @auth()--}}
+    {{--    <aside class="w-1/6 absolute ml-6" aria-label="Sidebar">--}}
+    {{--        <div class="px-3 py-4 overflow-y-auto rounded bg-gray-50 dark:bg-gray-800 border-1">--}}
+    {{--            @foreach($posts as $post)--}}
+    {{--                <h6>{{ $post->title }}</h6>--}}
+    {{--            @endforeach--}}
+    {{--        </div>--}}
+    {{--    </aside>--}}
+    {{--    @endauth--}}
 
     <div class="flex align-items-center mr-auto mr-auto w-full relative">
 
@@ -99,6 +99,7 @@
                         <form method="POST"
                               action="{{route('posts.edit', $post->id)}}">
                             @csrf
+                            @method('GET')
                             <button type="submit" class="btn btn-primary">Edit</button>
                         </form>
                     @endauth

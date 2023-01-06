@@ -18,12 +18,16 @@ use App\Repositories\LikeRepository;
 use App\Repositories\PostRepository;
 use App\Services\CookieService;
 use App\Services\Interfaces\CookieServiceInterface;
+use App\Services\Interfaces\PostServiceInterface;
 use App\Services\LoremIpsumService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -36,12 +40,14 @@ class PostController extends Controller
     private LikeRepositoryInterface $likeRepository;
     private CommentRepositoryInterface $commentRepository;
     private CookieServiceInterface $cookieService;
+    private PostServiceInterface $postService;
 
     public function __construct(
-        PostRepositoryInterface $postRepository,
-        LikeRepositoryInterface $likeRepository,
+        PostRepositoryInterface    $postRepository,
+        LikeRepositoryInterface    $likeRepository,
         CommentRepositoryInterface $commentRepository,
-        CookieServiceInterface $cookieService,
+        CookieServiceInterface     $cookieService,
+        PostServiceInterface       $postService
     )
     {
         //$this->authorizeResource(Post::class, 'post');
@@ -49,6 +55,7 @@ class PostController extends Controller
         $this->likeRepository = $likeRepository;
         $this->commentRepository = $commentRepository;
         $this->cookieService = $cookieService;
+        $this->postService = $postService;
     }
 
     /**
@@ -103,7 +110,7 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|\Illuminate\Http\Response|Redirector
      */
     public function store(StorePostRequest $request)
     {
@@ -120,17 +127,15 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return Application|Factory|View|\Illuminate\Http\Response
-     * @throws \Exception
+     * @param Post $post
+     * @return Application|Factory|View
      */
-    public function show($id)
+    public function show(Post $post)
     {
 //        $post = cache()->remember("post$id", now()->addDay(), function () use ($id) {  //todo Cache в імені враховувати всі параметри адресного рядка
 //            var_dump("cache post$id");
 //            return Post::findOrFail($id);
 //        });
-        $post = $this->postRepository->getPostById($id);
         $postLikes = $this->likeRepository->getLikesByPostId($post->id)->count();
         $comments = $this->commentRepository->getCommentByPostId($post->id);
         $commentLikes = $this->commentRepository->getCommentLikes($post->id);
@@ -141,23 +146,21 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param Post $post
+     * @return Application|Factory|RedirectResponse|View
      */
     public function edit(Post $post)
     {
-//        if (auth()->user()->is_admin || \auth()->check() && $post->user_id === auth()->user()->id) {
-//            return view('post-edit', compact('post'));
-//        }
-
-        return view('post-edit', compact('post'));
+        return $post->isAuthor() ?
+            view('post-edit', compact('post')) :
+            redirect()->back()->withErrors('You can not edit this post');
     }
 
     /**
      * Method for post updating
      * @param StorePostRequest $request
      * @param Post $post
-     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Redirector
      * @throws \Exception
      */
     public function update(StorePostRequest $request, Post $post)
@@ -171,18 +174,16 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param Post $post
+     * @return RedirectResponse
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
 //        if (! Gate::allows('delete-post', $post)) {
 //            //return Response::deny('Action denied');
 //            return redirect('/posts')->withErrors("You can't delete this post");
 //        }
 
-        $post->delete();
-        ProcessPostIndex::dispatch();
-        return redirect('/posts');
+        return $this->postService->destroy($post);
     }
 }

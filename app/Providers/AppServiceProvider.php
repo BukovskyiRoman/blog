@@ -6,6 +6,8 @@ use App\Services\CommentService;
 use App\Services\CookieService;
 use App\Services\Interfaces\CommentServiceInterface;
 use App\Services\Interfaces\CookieServiceInterface;
+use App\Services\Interfaces\PostServiceInterface;
+use App\Services\PostService;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -32,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind(CommentServiceInterface::class, function () {
             return new CommentService();
+        });
+        $this->app->bind(PostServiceInterface::class, function () {
+            return new PostService();
         });
     }
 

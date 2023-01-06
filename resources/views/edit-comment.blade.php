@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="flex align-items-center mr-auto mr-auto w-full relative">
-
-
         <div class="w-3/5 mr-auto ml-auto align-items-center" >
 
             @if ($errors->any())

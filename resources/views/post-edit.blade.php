@@ -1,10 +1,8 @@
 @extends('layout')
 
 @section('content')
-    <div style="display: flex; align-items: center; margin-left: auto; margin-right: auto;    width: 80%">
-
-
-        <div class="mb-3" style="width: 100%">
+    <div class="flex align-items-center mr-auto mr-auto w-full relative">
+        <div class="w-3/5 mr-auto ml-auto align-items-center">
 
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -21,10 +19,10 @@
                 @csrf
                 <input style="margin-top: 10px" class="form-control form-control-lg" type="text" placeholder="Title"
                        aria-label=".form-control-lg example" name="title" value="{{$post->title}}">
-                <textarea style="margin-top: 10px" class="form-control" id="exampleFormControlTextarea1" rows="3"
+                <textarea style="margin-top: 10px" class="form-control" id="exampleFormControlTextarea1" rows="15"
                           placeholder="Text"
                           name="body" >{{$post->body}}</textarea>
-                <button style="margin: 10px" type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary mt-2">Save</button>
             </form>
         </div>
 
